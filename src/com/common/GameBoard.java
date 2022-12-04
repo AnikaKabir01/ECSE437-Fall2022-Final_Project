@@ -173,99 +173,62 @@ public class GameBoard {
             cell = j - N_COLS - 1;
             
             if (cell >= 0) {
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if(field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
             cell = j - 1;
             
             if (cell >= 0) {
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
             cell = j + N_COLS - 1;
             
             if (cell < allCells) {
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
         }
         //for n-j columns
         cell = j - N_COLS;
 
         if(cell > 0) {
-            if (field[cell] > MINE_CELL) {
-                field[cell] -= COVER_FOR_CELL;
-
-                if (field[cell] == EMPTY_CELL) {
-                    find_empty_cells(cell);
-                }
-            }
+            innerIfs(cell);
         }
 
         cell = j + N_COLS;
 
         if (cell < allCells) {
 
-            if (field[cell] > MINE_CELL) {
-                field[cell] -= COVER_FOR_CELL;
-
-                if (field[cell] == EMPTY_CELL) {
-                    find_empty_cells(cell);
-                }
-            }
+            innerIfs(cell);
         }
         if (current_col < N_COLS - 1) {
             cell = j - N_COLS;
             
             if (cell >= 0) {
 
-                if(field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             } 
             cell = j + N_COLS + 1;
 
             if(cell < allCells) {
 
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
             //last condition
             cell = j + 1;
 
             if (cell < allCells) {
                 
-                if(field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
+                innerIfs(cell);
+            }
+        }
+    }
 
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+    //helper method for inner if conditions in find_empty_cells to remove redundancy
+    private void innerIfs(int cell) {
+        if (field[cell] > MINE_CELL) {
+            field[cell] -= COVER_FOR_CELL;
+
+            if(field[cell] == EMPTY_CELL) {
+                find_empty_cells(cell);
             }
         }
     }
