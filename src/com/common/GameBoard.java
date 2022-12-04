@@ -1,10 +1,12 @@
 package com.common;
 
 import java.awt.Image;
+import java.awt.image.ImageObserver;
 import java.util.Random;
 import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+import java.awt.Graphics;
 
 public class GameBoard {
     private final int NUM_IMAGES = 13;
@@ -17,9 +19,8 @@ public class GameBoard {
     private final int COVERED_MINE_CELL = MINE_CELL + COVER_FOR_CELL;
     private final int MARKED_MINE_CELL = COVERED_MINE_CELL + MARK_FOR_CELL;
 
-
     private final int DRAW_MINE = 9;
-    private final int DRAW_COLOUR = 10;
+    private final int DRAW_COVER = 10;
     private final int DRAW_MARK = 11;
     private final int DRAW_WRONG_MARK = 12;
 
@@ -43,6 +44,7 @@ public class GameBoard {
         initBoard();
     }
 
+    //Constructor for the board
     private void initBoard() {
 
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
@@ -55,12 +57,14 @@ public class GameBoard {
             img[i] = (new ImageIcon(path)).getImage();
         }
 
+        //Begins a new game
         newGame();
     }
 
     private void setPreferredSize(Dimension dimension) {
     }
 
+    //The following method is setting up the mine field which will be used to play the game
     private void newGame() {
 
         int cell;
@@ -72,6 +76,7 @@ public class GameBoard {
         allCells = N_ROWS * N_COLS;
         field = new int[allCells];
 
+        //Every cell is covered by default in the mine field
         for (int i = 0; i < allCells; i++) {
 
             field[i] = COVER_FOR_CELL;
@@ -80,6 +85,9 @@ public class GameBoard {
         statusbar.setText(Integer.toString(minesLeft));
 
         int i = 0;
+
+        //Each cell may be surrouded by 8 cells, in exception to the border cells
+        //We increase each adjacent cell by one unit for every randomly placed mine
 
         while (i < N_MINES) {
 
@@ -262,4 +270,60 @@ public class GameBoard {
         }
     }
    
+   // Converting the uncovered cell values to their corresponding image
+    public void paintComponent(Graphics g) {
+
+        int uncover = 0;
+
+        for (int i = 0; i < N_ROWS; i++) {
+
+            for (int j = 0; j < N_COLS; j++) {
+
+                int cell = field[(i * N_COLS) + j];
+
+                if (inGame && cell == MINE_CELL) {
+
+                    inGame = false;
+                }
+
+                if (!inGame) {
+
+                    if (cell == COVERED_MINE_CELL) {
+                        cell = DRAW_MINE;
+                    } else if (cell == MARKED_MINE_CELL) {
+                        cell = DRAW_MARK;
+                    } else if (cell > COVERED_MINE_CELL) {
+                        cell = DRAW_WRONG_MARK;
+                    } else if (cell > MINE_CELL) {
+                        cell = DRAW_COVER;
+                    }
+
+                } else {
+
+                    if (cell > COVERED_MINE_CELL) {
+                        cell = DRAW_MARK;
+                    } else if (cell > MINE_CELL) {
+                        cell = DRAW_COVER;
+                        uncover++;
+                    }
+                }
+
+                //Draws every cell on the window
+                g.drawImage(img[cell], (j * CELL_SIZE),
+                        (i * CELL_SIZE), (ImageObserver) this);
+            }
+        }
+
+        //If there is nothing left to uncover, the game is won
+        if (uncover == 0 && inGame) {
+
+            inGame = false;
+            statusbar.setText("Game won");
+
+        //Otherwise, the game is lost
+        } else if (!inGame) {
+            statusbar.setText("Game lost");
+        }
+    }
+
 }
