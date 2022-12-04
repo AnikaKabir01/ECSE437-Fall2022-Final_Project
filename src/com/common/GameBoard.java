@@ -152,5 +152,114 @@ public class GameBoard {
         }
     }
 
+    //if he clicks on a cell not on a mine, they uncover a number indicating how many times the cell is adjacent to.
+    //clicking on an empty cell, leads to uncovering other adjacent empty cells
+    //plus cells with a number that form a border around the space of the empty cells
+
+    //this is a recursive algorithm
+    private void find_empty_cells(int j) { //change j name
+        int current_col = j % N_COLS;
+        int cell;
+
+        if (current_col > 0) {
+            cell = j - N_COLS - 1;
+            
+            if (cell >= 0) {
+                if (field[cell] > MINE_CELL) {
+                    field[cell] -= COVER_FOR_CELL;
+
+                    if(field[cell] == EMPTY_CELL) {
+                        find_empty_cells(cell);
+                    }
+                }
+            }
+            cell = j - 1;
+            
+            if (cell >= 0) {
+                if (field[cell] > MINE_CELL) {
+                    field[cell] -= COVER_FOR_CELL;
+
+                    if (field[cell] == EMPTY_CELL) {
+                        find_empty_cells(cell);
+                    }
+                }
+            }
+            cell = j + N_COLS - 1;
+            
+            if (cell < allCells) {
+                if (field[cell] > MINE_CELL) {
+                    field[cell] -= COVER_FOR_CELL;
+
+                    if (field[cell] == EMPTY_CELL) {
+                        find_empty_cells(cell);
+                    }
+                }
+            }
+        }
+        //for n-j columns
+        cell = j - N_COLS;
+
+        if(cell > 0) {
+            if (field[cell] > MINE_CELL) {
+                field[cell] -= COVER_FOR_CELL;
+
+                if (field[cell] == EMPTY_CELL) {
+                    find_empty_cells(cell);
+                }
+            }
+        }
+
+        cell = j + N_COLS;
+
+        if (cell < allCells) {
+
+            if (field[cell] > MINE_CELL) {
+                field[cell] -= COVER_FOR_CELL;
+
+                if (field[cell] == EMPTY_CELL) {
+                    find_empty_cells(cell);
+                }
+            }
+        }
+        if (current_col < N_COLS - 1) {
+            cell = j - N_COLS;
+            
+            if (cell >= 0) {
+
+                if(field[cell] > MINE_CELL) {
+                    field[cell] -= COVER_FOR_CELL;
+
+                    if (field[cell] == EMPTY_CELL) {
+                        find_empty_cells(cell);
+                    }
+                }
+            } 
+            cell = j + N_COLS + 1;
+
+            if(cell < allCells) {
+
+                if (field[cell] > MINE_CELL) {
+                    field[cell] -= COVER_FOR_CELL;
+
+                    if (field[cell] == EMPTY_CELL) {
+                        find_empty_cells(cell);
+                    }
+                }
+            }
+            //last condition
+            cell = j + 1;
+
+            if (cell < allCells) {
+                
+                if(field[cell] > MINE_CELL) {
+                    field[cell] -= COVER_FOR_CELL;
+
+                    if (field[cell] == EMPTY_CELL) {
+                        find_empty_cells(cell);
+                    }
+                }
+            }
+        }
+    }
    
 }
