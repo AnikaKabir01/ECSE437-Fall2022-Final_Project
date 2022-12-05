@@ -4,11 +4,19 @@ import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.util.Random;
 import java.awt.Dimension;
+import java.awt.Component.*;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
+
+// import org.w3c.dom.events.MouseEvent;
+
 import javax.swing.ImageIcon;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class GameBoard {
+public class GameBoard extends JPanel{
     private final int NUM_IMAGES = 13;
     private final int CELL_SIZE = 15;
 
@@ -57,12 +65,15 @@ public class GameBoard {
             img[i] = (new ImageIcon(path)).getImage();
         }
 
+        //Add Mouse listener
+        addMouseListener(new MinesAdapter());
+
         //Begins a new game
         newGame();
     }
 
-    private void setPreferredSize(Dimension dimension) {
-    }
+    // private void setPreferredSize(Dimension dimension) {
+    // }
 
     //The following method is setting up the mine field which will be used to play the game
     private void newGame() {
@@ -173,99 +184,62 @@ public class GameBoard {
             cell = j - N_COLS - 1;
             
             if (cell >= 0) {
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if(field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
             cell = j - 1;
             
             if (cell >= 0) {
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
             cell = j + N_COLS - 1;
             
             if (cell < allCells) {
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
         }
         //for n-j columns
         cell = j - N_COLS;
 
         if(cell > 0) {
-            if (field[cell] > MINE_CELL) {
-                field[cell] -= COVER_FOR_CELL;
-
-                if (field[cell] == EMPTY_CELL) {
-                    find_empty_cells(cell);
-                }
-            }
+            innerIfs(cell);
         }
 
         cell = j + N_COLS;
 
         if (cell < allCells) {
 
-            if (field[cell] > MINE_CELL) {
-                field[cell] -= COVER_FOR_CELL;
-
-                if (field[cell] == EMPTY_CELL) {
-                    find_empty_cells(cell);
-                }
-            }
+            innerIfs(cell);
         }
         if (current_col < N_COLS - 1) {
             cell = j - N_COLS;
             
             if (cell >= 0) {
 
-                if(field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             } 
             cell = j + N_COLS + 1;
 
             if(cell < allCells) {
 
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+                innerIfs(cell);
             }
             //last condition
             cell = j + 1;
 
             if (cell < allCells) {
                 
-                if(field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
+                innerIfs(cell);
+            }
+        }
+    }
 
-                    if (field[cell] == EMPTY_CELL) {
-                        find_empty_cells(cell);
-                    }
-                }
+    //helper method for inner if conditions in find_empty_cells to remove redundancy
+    private void innerIfs(int cell) {
+        if (field[cell] > MINE_CELL) {
+            field[cell] -= COVER_FOR_CELL;
+
+            if(field[cell] == EMPTY_CELL) {
+                find_empty_cells(cell);
             }
         }
     }
@@ -326,4 +300,77 @@ public class GameBoard {
         }
     }
 
+
+    //method reacts to the left and right mouseclicks of the user 
+    private class MinesAdapter extends MouseAdapter { //MouseAdapter import not sure
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            //x and y coord. of the mouse clicks
+            int x = e.getX();
+            int y = e.getY(); 
+
+            //compute corresponding column and row of the minefield
+            int cCol = x / CELL_SIZE;
+            int cRow = y / CELL_SIZE;
+
+            boolean doRepaint = false;
+
+            if(!inGame) {
+                newGame();
+                repaint();
+                
+            }
+
+            //check if we are located in the minefield
+            if ((x < N_COLS * CELL_SIZE) && (y < N_ROWS * CELL_SIZE)) {
+                if (e.getButton() == MouseEvent.BUTTON3) { //uncovering of mines done with right click (BUTTON3)
+
+                    if(field[(cRow * N_COLS) + cCol] > MINE_CELL) {
+                        doRepaint = true;
+
+                        if (field[(cRow * N_COLS) + cCol] <= COVERED_MINE_CELL) { //if there is mine, draw mark for the cell
+                            if(minesLeft > 0) {
+                                field[(cRow * N_COLS) + cCol] += MARK_FOR_CELL;
+                                minesLeft--;
+
+                                String msg = Integer.toString(minesLeft);
+
+                                statusbar.setText(msg);
+                            } else {
+                                statusbar.setText("No marks left");
+                            }
+                        } else {
+                            field[(cRow * N_COLS)+ cCol] -= MARK_FOR_CELL; //if cell already marked, remove mark
+                            minesLeft++;
+
+                            String msg = Integer.toString(minesLeft);
+                            statusbar.setText(msg);
+                        }
+                    }
+                } else {
+                    if (field[(cRow * N_COLS) + cCol] > COVERED_MINE_CELL) { 
+                        return;
+                    }
+                    if ((field[(cRow * N_COLS) + cCol] > MINE_CELL) && (field[(cRow * N_COLS) + cCol] < MARKED_MINE_CELL)) {
+
+                        field[(cRow * N_COLS) + cCol] -= COVER_FOR_CELL; //left click removes a cover from the cell
+                        doRepaint = true;
+
+                        if (field[(cRow * N_COLS) + cCol] == MINE_CELL) { //if we left click on a mine the game is over
+                            inGame = false; //game over
+                        }
+
+                        if (field[(cRow * N_COLS) + cCol] == EMPTY_CELL) { //if we left click on an empty cell we call on find_empty_cells method to uncover other empty cells adjacent to it
+
+                            find_empty_cells((cRow * N_COLS) + cCol);
+                        }
+                    }
+                }
+                if (doRepaint) {
+                    repaint();
+                }
+            }
+        }
+    }
 }
