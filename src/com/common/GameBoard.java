@@ -245,6 +245,7 @@ public class GameBoard extends JPanel{
     }
    
    // Converting the uncovered cell values to their corresponding image
+   @Override
     public void paintComponent(Graphics g) {
 
         int uncover = 0;
@@ -284,7 +285,7 @@ public class GameBoard extends JPanel{
 
                 //Draws every cell on the window
                 g.drawImage(img[cell], (j * CELL_SIZE),
-                        (i * CELL_SIZE), (ImageObserver) this);
+                        (i * CELL_SIZE), this);
             }
         }
 
