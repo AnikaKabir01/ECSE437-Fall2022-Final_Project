@@ -6,4 +6,4 @@ jobs:
   test_schedule:
     runs-on: ubuntu-latest
     steps:
-    - run: echo "BUILDING"
+    - run: echo "BUILDING COMPLETE"
