@@ -37,6 +37,8 @@ public class MinesweeperGame extends JFrame {
 
             var ex = new MinesweeperGame();
             ex.setVisible(true);
+
+            new TimerWindow(100);
         });
     }
 }
