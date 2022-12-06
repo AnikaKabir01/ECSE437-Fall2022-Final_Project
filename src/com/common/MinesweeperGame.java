@@ -39,6 +39,7 @@ public class MinesweeperGame extends JFrame {
             new RestartGame();
             new CloseButton();
             new TimerWindow(100);
+            new Instructions();
             
             
             // new Menu();
