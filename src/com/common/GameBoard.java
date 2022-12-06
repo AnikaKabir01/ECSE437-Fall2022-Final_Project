@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
+// import com.common.MinesAdapter.InnerClass;
+
 // import org.w3c.dom.events.MouseEvent;
 
 import javax.swing.ImageIcon;
@@ -18,44 +20,59 @@ import java.awt.event.MouseEvent;
 
 public class GameBoard extends JPanel{
     private final int NUM_IMAGES = 13;
-    private final int CELL_SIZE = 15;
+    final static int CELL_SIZE = 15;
 
-    private final int COVER_FOR_CELL = 10;
-    private final int MARK_FOR_CELL = 10;
-    private final int EMPTY_CELL = 0;
-    private final int MINE_CELL = 9;
-    private final int COVERED_MINE_CELL = MINE_CELL + COVER_FOR_CELL;
-    private final int MARKED_MINE_CELL = COVERED_MINE_CELL + MARK_FOR_CELL;
+    final int COVER_FOR_CELL = 10;
+    final int MARK_FOR_CELL = 10;
+    final int EMPTY_CELL = 0;
+    final int MINE_CELL = 9;
+    final int COVERED_MINE_CELL = MINE_CELL + COVER_FOR_CELL;
+    final int MARKED_MINE_CELL = COVERED_MINE_CELL + MARK_FOR_CELL;
+
+    // static boolean wantRestart = false;
 
     private final int DRAW_MINE = 9;
     private final int DRAW_COVER = 10;
     private final int DRAW_MARK = 11;
     private final int DRAW_WRONG_MARK = 12;
 
-    private final int N_MINES = 40;
-    private final int N_ROWS = 16;
-    private final int N_COLS = 16; //226 cells in total in the minefield
+    // private final int N_MINES = 40;
+    // final int N_ROWS = 16;
+    // final int N_COLS = 16; //226 cells in total in the minefield
+    int N_MINES;
+    int N_COLS;
+    int N_ROWS;
 
-    private final int BOARD_WIDTH = N_COLS * CELL_SIZE + 1;
-    private final int BOARD_HEIGHT = N_ROWS * CELL_SIZE + 1;
+    // private final int BOARD_WIDTH = N_COLS * CELL_SIZE + 1;
+    // private final int BOARD_HEIGHT = N_ROWS * CELL_SIZE + 1;
 
-    private int[] field;
-    private boolean inGame; //in game or game over
-    private int minesLeft;
+    int[] field;
+    boolean inGame; //in game or game over
+    int minesLeft;
     private Image[] img; //images will be images 0 to 15.png...
-    private JLabel statusbar;
+    JLabel statusbar;
     private int allCells;
 
-    public GameBoard(JLabel statusbar) {
+    public GameBoard(JLabel statusbar, int nCols, int nRows, int nMines) {
 
+        N_COLS = nCols;
+        N_ROWS = nRows;
+        N_MINES = nMines;
+
+        
         this.statusbar = statusbar;
-        initBoard();
+        initBoard(); //!!!
+    }
+
+    public GameBoard getGameBoard() {
+        return this;
     }
 
     //Constructor for the board
     private void initBoard() {
 
-        setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        // setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        setPreferredSize(new Dimension(N_COLS * CELL_SIZE + 1, N_ROWS * CELL_SIZE + 1));
 
         img = new Image[NUM_IMAGES];
 
@@ -65,7 +82,11 @@ public class GameBoard extends JPanel{
             img[i] = (new ImageIcon(path)).getImage();
         }
 
+        // MinesAdapter minesAdapter = new MinesAdapter(statusbar); //!!!!!
+        // InnerClass innerClass = minesAdapter.new InnerClass();
+
         //Add Mouse listener
+        // addMouseListener(innerClass);
         addMouseListener(new MinesAdapter());
 
         //Begins a new game
@@ -76,7 +97,7 @@ public class GameBoard extends JPanel{
     // }
 
     //The following method is setting up the mine field which will be used to play the game
-    private void newGame() {
+    void newGame() {
 
         int cell;
 
@@ -176,7 +197,7 @@ public class GameBoard extends JPanel{
     //plus cells with a number that form a border around the space of the empty cells
 
     //this is a recursive algorithm
-    private void find_empty_cells(int j) { //change j name
+    void find_empty_cells(int j) { //change j name
         int current_col = j % N_COLS;
         int cell;
 
