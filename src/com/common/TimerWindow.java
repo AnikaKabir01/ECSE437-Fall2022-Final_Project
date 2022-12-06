@@ -20,11 +20,12 @@ class TimerWindow extends JFrame implements ActionListener{  //creation of an wi
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void setTimer() {
+    private JButton setTimer() {
         jbtn = new JButton("Starting 100 second countdown...");
         add(jbtn);
         swingtimer = new Timer(2222,this);
         swingtimer.start();
+        return jbtn;
     }
     public void actionPerformed(ActionEvent evnt) {
         start--;

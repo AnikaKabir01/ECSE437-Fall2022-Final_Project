@@ -5,23 +5,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 
-
-
 public class MinesweeperGame extends JFrame {
 
     private JLabel statusbar;
 
-    public MinesweeperGame() {
-
-        initUI();
+    public MinesweeperGame(int nCols, int nRows, int nMines) {
+        initUI(nCols, nRows, nMines);
     }
 
-    private void initUI() {
+    private void initUI(int nCols, int nRows, int nMines) {
 
         statusbar = new JLabel("");
         add(statusbar, BorderLayout.SOUTH);
 
-        add(new GameBoard(statusbar));
+        add(new GameBoard(statusbar, nCols, nRows, nMines));
 
         setResizable(false);
         pack();
@@ -35,10 +32,15 @@ public class MinesweeperGame extends JFrame {
 
         EventQueue.invokeLater(() -> {
 
-            var ex = new MinesweeperGame();
+            var ex = new MinesweeperGame(16, 16, 40);
             ex.setVisible(true);
 
+            new SetDifficulty();
+            new RestartGame();
+            new CloseButton();
             new TimerWindow(100);
+            
+            // new Menu();
         });
     }
 }
