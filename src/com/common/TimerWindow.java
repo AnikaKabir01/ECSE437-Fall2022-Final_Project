@@ -11,6 +11,7 @@ class TimerWindow extends JFrame implements ActionListener{  //creation of an wi
     private Timer swingtimer; //swing timer instance
 
     TimerWindow(int tm) {
+        
         start += tm;
         setTitle("Timer Window");
         setLayout(new FlowLayout());

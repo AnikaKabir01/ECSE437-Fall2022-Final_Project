@@ -18,6 +18,7 @@ class RestartGame extends JFrame {  //creation of an window using JFrame
     }
 
     RestartGame() {
+        
         setTitle("Restart Window");
         setLayout(new FlowLayout());
         setRestartButton();

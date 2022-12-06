@@ -59,6 +59,7 @@ public class GameBoard extends JPanel{
         N_ROWS = nRows;
         N_MINES = nMines;
 
+        
         this.statusbar = statusbar;
         initBoard(); //!!!
     }

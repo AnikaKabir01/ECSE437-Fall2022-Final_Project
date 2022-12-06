@@ -14,6 +14,7 @@ public class CloseButton extends JFrame {
         // quitBtn.addActionListener(new CloseListener());
         quitBtn.addActionListener(e -> System.exit(0));
 
+        
         add(quitBtn);
     }
 

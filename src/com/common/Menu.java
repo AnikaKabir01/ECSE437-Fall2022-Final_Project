@@ -18,6 +18,7 @@ void SetMenu(){
     c.add(new RestartGame());
     c.add(new CloseButton());
     c.add(new TimerWindow(100));
+    
     // new SetDifficulty();
     // new RestartGame();
     // new CloseButton();

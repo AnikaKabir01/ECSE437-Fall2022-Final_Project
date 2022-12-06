@@ -31,6 +31,7 @@ public class SetDifficulty extends JFrame {
     }
 
     SetDifficulty() {
+        
         setTitle("Difficulty Window");
         setLayout(new FlowLayout());
         setDifficultyButtons();
