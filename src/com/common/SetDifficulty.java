@@ -22,12 +22,6 @@ public class SetDifficulty extends JFrame {
         add(easyBtn);
         add(mediumBtn);
         add(hardBtn);
-        // JButton[] jbtnArray = new JButton[3];
-        // jbtnArray[0] = easyBtn;
-        // jbtnArray[1] = mediumBtn;
-        // jbtnArray[2] = hardBtn;
-        // return jbtnArray;
-
     }
 
     SetDifficulty() {

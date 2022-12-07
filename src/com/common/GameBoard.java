@@ -82,19 +82,11 @@ public class GameBoard extends JPanel{
             img[i] = (new ImageIcon(path)).getImage();
         }
 
-        // MinesAdapter minesAdapter = new MinesAdapter(statusbar); //!!!!!
-        // InnerClass innerClass = minesAdapter.new InnerClass();
-
-        //Add Mouse listener
-        // addMouseListener(innerClass);
         addMouseListener(new MinesAdapter());
 
         //Begins a new game
         newGame();
     }
-
-    // private void setPreferredSize(Dimension dimension) {
-    // }
 
     //The following method is setting up the mine field which will be used to play the game
     void newGame() {
