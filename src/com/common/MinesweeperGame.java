@@ -15,7 +15,8 @@ public class MinesweeperGame extends JFrame {
 
     private void initUI(int nCols, int nRows, int nMines) {
 
-        
+        //add comment for demonstrating deployement
+
         statusbar = new JLabel("");
         add(statusbar, BorderLayout.SOUTH);
 
